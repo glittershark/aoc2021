@@ -1,16 +1,11 @@
 % -*- mode: prolog -*-
 :- use_module(library(readutil)).
 :- use_module(library(lists)).
+:- use_module(utils).
 
 %%% Utils
 
 string_number(S, N) :- number_string(N, S).
-
-read_lines(Stream, []) :- at_end_of_stream(Stream).
-read_lines(Stream, [X | L]) :-
-    \+ at_end_of_stream(Stream),
-    read_line_to_string(Stream, X),
-    read_lines(Stream, L).
 
 read_input(File, Numbers) :-
     open(File, read, Stream),
