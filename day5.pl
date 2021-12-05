@@ -69,13 +69,10 @@ line_points(any, Line, Points) :-
 
 %%%
 
-:- table two_lines_overlap_at/2.
 two_lines_overlap_at(LinePoints, OverlappingPoint) :-
-    % this is exponential, unsurprisingly
-    select(Pts1, LinePoints, RestPoints),
-    member(Pts2, RestPoints),
-    member(OverlappingPoint, Pts1),
-    member(OverlappingPoint, Pts2).
+    flatten(LinePoints, AllPoints),
+    Count #>= 2,
+    aggregate(count, member(OverlappingPoint, AllPoints), Count).
 
 num_overlapping_points(Dir, Lines, Num) :-
     maplist(line_points(Dir), Lines, LinePoints),
