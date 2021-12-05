@@ -1,5 +1,11 @@
 % -*- mode: prolog -*-
-:- module(utils, [read_lines/2, binary_number/2, times/5, times/6]).
+:- module(utils, [read_lines/2,
+                  binary_number/2,
+                  times/5,
+                  times/6,
+                  string_phrase/2,
+                  string_phrase/3,
+                  phrase_file/2]).
 :- use_module(library(clpfd)).
 
 read_lines(Stream, []) :- at_end_of_stream(Stream).
@@ -28,3 +34,20 @@ times(N, G, Sep, [X | Xs]) -->
     Sep,
     { N1 is N - 1 },
     times(N1, G, Sep, Xs).
+
+:- meta_predicate
+       string_phrase(//, ?),
+       string_phrase(//, ?, ?).
+string_phrase(RuleSet, InputString) :-
+   string_codes(InputString, Input),
+   phrase(RuleSet, Input).
+string_phrase(RuleSet, InputString, RestString) :-
+   string_codes(InputString, Input),
+   phrase(RuleSet, Input, RestCodes),
+   string_codes(RestString, RestCodes).
+
+:- meta_predicate phrase_file(//, +).
+phrase_file(RuleSet, File) :-
+   open(File, read, Stream),
+   read_string(Stream, _, String),
+   string_phrase(RuleSet, String).
