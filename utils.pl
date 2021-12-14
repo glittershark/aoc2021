@@ -5,7 +5,9 @@
                   times/6,
                   string_phrase/2,
                   string_phrase/3,
-                  phrase_file/2]).
+                  phrase_file/2,
+                  lazy_sequence/5
+                 ]).
 :- use_module(library(clpfd)).
 
 read_lines(Stream, []) :- at_end_of_stream(Stream).
@@ -51,3 +53,12 @@ phrase_file(RuleSet, File) :-
    open(File, read, Stream),
    read_string(Stream, _, String),
    string_phrase(RuleSet, String).
+
+
+:- meta_predicate lazy_sequence(:, :, ?).
+lazy_sequence(_, _, []) --> [].
+lazy_sequence(Element, _, [X]) --> call(Element, X).
+lazy_sequence(Element, Sep, [X | Xs]) -->
+    call(Element, X),
+    Sep,
+    lazy_sequence(Element, Sep, Xs).
